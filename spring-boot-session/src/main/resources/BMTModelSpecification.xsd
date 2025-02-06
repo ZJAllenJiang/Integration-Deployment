@@ -1,0 +1,3517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed Materials - Property of IBM
+
+ IBM Cognos Products: fmmd
+
+ (C) Copyright IBM Corp. 2003, 2010
+
+ US Government Users Restricted Rights - Use, duplication or disclosure restricted by GSA ADP Schedule Contract with IBM Corp.
+-->
+<!--
+    Copyright (C) 2008 Cognos ULC, an IBM Company. All rights reserved.
+    Cognos (R) is a trademark of Cognos ULC, (formerly Cognos Incorporated).
+-->
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bmtcr1="http://www.developer.cognos.com/schemas/bmt/60/3" targetNamespace="http://www.developer.cognos.com/schemas/bmt/60/3" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xsd:complexType name="modelObjectType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>Objects that are not visible in IBM Cognos 10. Properties are typically not localizable.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_name_modelObjectType"/>
+					<xsd:documentation>Specifies a name for the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:guid" minOccurs="0"/>
+			<xsd:element ref="bmtcr1:property" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="reportObjectType">
+		<xsd:annotation>
+			<xsd:documentation>Objects that are visible in IBM Cognos 10. Properties are typically localizable NOTE: if a property is localizable, there must be exactly one instance of it for each locale supported in this model (see project/locales).</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="name" type="bmtcr1:nameType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_name_reportObjectType">The name of an object. The local attribute indicates the language of the name value.</xsd:documentation>
+					<xsd:documentation>Specifies a name for the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="description" type="bmtcr1:nameType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Provides a text-based description for the parent element in the specified language.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:group ref="bmtcr1:changeManagement"/>
+			<xsd:element name="screenTip" type="bmtcr1:nameType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Defines the text that will be displayed when a user passes the cursor over an interface element. Text should be specific to the language of the locale attribute.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:property" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="relationshipType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:modelObjectType">
+				<xsd:sequence>
+					<xsd:group ref="bmtcr1:relationshipProperties"/>
+				</xsd:sequence>
+				<xsd:attribute name="status" type="bmtcr1:statusType" use="optional" default="valid">
+					<xsd:annotation>
+						<xsd:documentation source="doc_att_status_relation"/>
+						<xsd:documentation>Specifies the status of the resolution of a relationship.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="sectionType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="bmtcr1:folder"/>
+						<xsd:element ref="bmtcr1:function"/>
+						<xsd:element ref="bmtcr1:namespace"/>
+						<xsd:element ref="bmtcr1:object"/>
+						<xsd:element ref="bmtcr1:shortcut"/>
+						<xsd:element ref="bmtcr1:querySubject"/>
+						<xsd:element ref="bmtcr1:updateSubject"/>
+						<xsd:element ref="bmtcr1:relationship"/>
+						<xsd:element ref="bmtcr1:relationshipShortcut"/>
+						<xsd:element ref="bmtcr1:filter"/>
+						<xsd:element ref="bmtcr1:calculation"/>
+						<xsd:element ref="bmtcr1:dimension"/>
+						<xsd:element ref="bmtcr1:scopeRelationship"/>
+					</xsd:choice>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="namespaceType">
+		<xsd:annotation>
+			<xsd:documentation>*** work around Engine limitation ***</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:sectionType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="promptInfoType">
+		<xsd:sequence>
+			<xsd:element name="promptType" type="bmtcr1:promptTypeValues" default="serverDetermined">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>The type of prompt control to be used when prompting for a value for this item.</para>
+						<para>Note: For SAP BW, selectWithSearch, selectDateTime, and selectInterval prompt types are not supported. The selectTime prompt type should only be used for SAP BW query items (facts) of type time.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="promptCascadeOnRef" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If prompted for, a preceding prompt is generated for each of the referenced query items. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="promptDisplayItemRef" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If prompted for, one or more of the referenced objects is used as the display value of the prompt control. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="promptFilterItemRef" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If automatic filters are generated for this object, they will actually be created on the referenced objects.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="promptUseItemRef" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If prompted for, one or more of the referenced objects is used as the prompt value(s). </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="securityObjectType">
+		<xsd:sequence>
+			<xsd:element name="displayPath">
+				<xsd:annotation>
+					<xsd:documentation>Defines the search path in displayable form.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:string"/>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:cmSearchPath"/>
+		</xsd:sequence>
+		<xsd:attribute name="type" use="required">
+			<xsd:annotation>
+				<xsd:documentation source="doc_att_type_securityobject"/>
+				<xsd:documentation>Specifies that the property is of the indicated type.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NMTOKEN">
+					<xsd:enumeration value="account">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the securityObject is an account.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="group">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the securityObject is a group.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="role">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the securityObject is a role.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="decisionRoleType">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="bmtcr1:securityObject"/>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="orderByType">
+		<xsd:sequence>
+			<xsd:element name="sortItem" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>First item is the major sort key. Those that follow are progressively more minor sort keys.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="refobj" type="bmtcr1:refType">
+							<xsd:annotation>
+								<xsd:documentation>Must contain a reference to a query item within the level.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="sort" use="optional" default="ascending">
+						<xsd:annotation>
+							<xsd:documentation>Ascending or descending sort rule. NULLs are always at the end.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="ascending">
+									<xsd:annotation>
+										<xsd:documentation>sort in ascending order</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="descending">
+									<xsd:annotation>
+										<xsd:documentation>sort in descending order</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+					<xsd:attribute name="nullPlacement" use="optional" default="nullsLast">
+						<xsd:annotation>
+							<xsd:documentation>Placement of NULLs, either first, last, or depending on the underlying database. For most databases NULLS LAST is the default for ascending order, and NULLS FIRST is the default for
+descending order.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="nullsUnspecified">
+									<xsd:annotation>
+										<xsd:documentation>Placement of NULLs is not specified</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="nullsFirst">
+									<xsd:annotation>
+										<xsd:documentation>NULL appear first in the sort order</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="nullsLast">
+									<xsd:annotation>
+										<xsd:documentation>NULLs appear last in the sort order</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="packageViewType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:group ref="bmtcr1:packageProperties"/>
+				</xsd:sequence>
+				<xsd:attribute name="isRoleBased" type="xsd:boolean" use="optional" default="false">
+					<xsd:annotation>
+						<xsd:documentation>If true, this package is RESERVED for specifying object security by role. There is one package for each role for which object security has been set. The package must have exactly one security view that specifies the role. For that role, each object referenced by that security view has visibility opposite to the normal state, in all normal packages published for this model. For more information, see the secured property.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="securityViewType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:modelObjectType">
+				<xsd:sequence>
+					<xsd:group ref="bmtcr1:securityViewProperties" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="isRoleBased" type="xsd:boolean" use="optional" default="false">
+					<xsd:annotation>
+						<xsd:documentation>If true, this package is RESERVED for specifying object security by role. There is one package for each role for which object security has been set. The package must have exactly one security view that specifies the role. For that role, each object referenced by that security view has visibility opposite to the normal state, in all normal packages published for this model. For more information, see the secured property.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="queryItemFolderType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:element name="hidden" type="xsd:boolean" default="false" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>If set to true, the object is hidden in all published packages.</para>
+								<para>Note: For SAP BW data sources, the folder that contains the surrogate keys should have its hidden property set to true.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:choice minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="bmtcr1:queryItem"/>
+						<xsd:element ref="bmtcr1:queryItemFolder"/>
+					</xsd:choice>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="securityFilterDefinitionType">
+		<xsd:sequence>
+			<xsd:element ref="bmtcr1:securityObject"/>
+			<xsd:element name="basedOn" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A filter, which at execution time must be AND'ed with the filter in the object that has the matching securityObject.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:cmSearchPath"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:choice minOccurs="0">
+				<xsd:element name="refobj" type="bmtcr1:refType">
+					<xsd:annotation>
+						<xsd:documentation>References an object.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:sequence>
+					<xsd:element name="displayName" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the name that will be displayed to the user for the parent object.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="bmtcr1:expression"/>
+				</xsd:sequence>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="objectType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:element ref="bmtcr1:object" minOccurs="0" maxOccurs="unbounded"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="propertyType" mixed="true">
+		<xsd:attribute name="name" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation source="doc_att_name"/>
+				<xsd:documentation>Specifies a name for the property.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="type" use="optional">
+			<xsd:annotation>
+				<xsd:documentation source="doc_att_type_propertytype"/>
+				<xsd:documentation>Specifies a type for the property.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NMTOKEN">
+					<xsd:enumeration value="blob">
+						<xsd:annotation>
+							<xsd:documentation source="doc_enum_blob_object"/>
+							<xsd:documentation>Specifies the type for this object as blob.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="boolean">
+						<xsd:annotation>
+							<xsd:documentation source="doc_enum_boolean_object"/>
+							<xsd:documentation>Specifies the type for this object as boolean.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="composite">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the type for this object is composed of a combination of types.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="dateTime">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that this object represents a date and time.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="enumeration">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that this object is an enumeration.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="hidden">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that this object is hidden.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="number">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the type for this object as numeric.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="readOnly">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that this object is read only.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="ref">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that this object is a reference.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="string">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the type for this object as string.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="querySubjectType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:group ref="bmtcr1:querySubjectProperties" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="status" type="bmtcr1:statusType" use="optional" default="valid">
+					<xsd:annotation>
+						<xsd:documentation source="doc_att_status_querysubject"/>
+						<xsd:documentation>Specifies the status of the execution of a query.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="queryItemType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:group ref="bmtcr1:queryItemProperties" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="queryItemMapType">
+		<xsd:sequence>
+			<xsd:annotation>
+				<xsd:documentation>The queryItems being referenced must belong to the same querySubject.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:element name="keyRef">
+				<xsd:annotation>
+					<xsd:documentation>When a parameterMap has been defined, the query looks for this unique identifier when it executes and returns the value in the valueRef element.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="valueRef">
+				<xsd:annotation>
+					<xsd:documentation>When a parameterMap has been defined, and the unique identifier (keyRef) has been found by the query, this value gets returned when the query executes.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="sqlType" mixed="true">
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="column" type="bmtcr1:macroType">
+				<xsd:annotation>
+					<xsd:documentation>Defines a column in the specified database.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="table" type="bmtcr1:macroType">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Defines a database table.</para>
+						<para>Note: Not applicable to models based on SAP BW data sources.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:choice>
+		<xsd:attribute name="type" default="cognos">
+			<xsd:annotation>
+				<xsd:documentation source="doc_att_type_sql"/>
+				<xsd:documentation>Specifies the level of flexibility the system is allowed in optimizing the SQL from this element, before presenting it to the data source.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NMTOKEN">
+					<xsd:enumeration value="cognos">
+						<xsd:annotation>
+							<xsd:documentation>Cognos SQL can be optimized by the system and combined with other SQL before being sent to the data source.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="oracle">
+						<xsd:annotation>
+							<xsd:documentation>OBSOLETE</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="db2">
+						<xsd:annotation>
+							<xsd:documentation>OBSOLETE</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="sqlServer">
+						<xsd:annotation>
+							<xsd:documentation>OBSOLETE</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="sql92">
+						<xsd:annotation>
+							<xsd:documentation>OBSOLETE</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="sql99">
+						<xsd:annotation>
+							<xsd:documentation>OBSOLETE: synonym for native.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="native">
+						<xsd:annotation>
+							<xsd:documentation>Native SQL cannot be modified except by macro substitution, but can be combined with other SQL into a single SQL query to send to the data source.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="passThrough">
+						<xsd:annotation>
+							<xsd:documentation>Pass-through SQL cannot be modified except by macro substitution, and cannot be combined with other SQL. It must be sent to the data source as a stand-alone query. However, results can be combined with results of other queries.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="functionType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:element name="syntaxTip" type="bmtcr1:nameType" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation>Describes the syntax that is required by a function.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="canonicalName" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the name by which an object is known in the database or plug-in.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="bmtcr1:dataSourceRef" minOccurs="0"/>
+					<xsd:element name="result">
+						<xsd:annotation>
+							<xsd:documentation>Contains the value resulting from the execution of a function.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:group ref="bmtcr1:dataColumnProperties"/>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="procParameters">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_procParameters_functionType"/>
+							<xsd:documentation>A container for procParameter elements.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="procParameter" minOccurs="0" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation source="doc_ele_procParameter_functionType"/>
+										<xsd:documentation>
+											<para>Defines a parameter required to call a stored procedure or function. Used to determine whether an expression that uses the stored procedure or function is valid. The value of the parameter is supplied from the expression that uses this function or stored procedure.</para>
+											<para>Note: SAP BW does not support stored procedures and therefore this object should not form part of a Framework Manager model based on an SAP BW data source.</para>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:group ref="bmtcr1:callParameterProperties"/>
+										</xsd:sequence>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="storedProcedureType">
+		<xsd:sequence>
+			<xsd:sequence>
+				<xsd:element ref="bmtcr1:dataSourceRef"/>
+			</xsd:sequence>
+			<xsd:group ref="bmtcr1:routineProperties"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="expressionType" mixed="true">
+		<xsd:complexContent mixed="true">
+			<xsd:extension base="bmtcr1:macroType">
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="functionref" type="xsd:string">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>References a function.</para>
+								<para>RESERVED for future use.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="refobj" type="bmtcr1:refType">
+						<xsd:annotation>
+							<xsd:documentation>References an object.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="bmtcr1:refobjViaShortcut"/>
+				</xsd:choice>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="cardinalityType">
+		<xsd:sequence>
+			<xsd:element name="refobj" type="bmtcr1:refType">
+				<xsd:annotation>
+					<xsd:documentation>References an object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="mincard" type="bmtcr1:cardinalityEnum">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>The minimum number (cardinality) of rows that will match this end of the relationship. Normally zero or one.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxcard" type="bmtcr1:cardinalityEnum">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>The maximum number (cardinality) of rows that will match this end of the relationship. The value is normally one or many.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="refCollectionType">
+		<xsd:sequence>
+			<xsd:element name="refobj" type="bmtcr1:refType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>References an object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="shortcutType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:element name="refobj" type="bmtcr1:refType">
+						<xsd:annotation>
+							<xsd:documentation>References an object.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="targetType" type="xsd:NMTOKEN">
+						<xsd:annotation>
+							<xsd:documentation>The element tag name (type) of the object that is referenced by refobj. The shortcut acts as a namespace for object naming purposes if and only if targetType is namespace, folder, or function.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="treatAs" default="reference" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the CQE behaviour for the shortcut
+
+alias - shortcut will be treated as an alias table in the generated sql 
+
+reference - (default) shortcut will be treated as a simple reference to the target object. </xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="reference"/>
+								<xsd:enumeration value="alias"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="relationshipShortcutType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:modelObjectType">
+				<xsd:sequence>
+					<xsd:element name="left">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_left_RelationshipShortcutType">References the left object in a relationship.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="refobj" type="bmtcr1:refType">
+									<xsd:annotation>
+										<xsd:documentation>References an object.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="right">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_right_RelationshipShortcutType">References the right object in a relationship.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="refobj" type="bmtcr1:refType">
+									<xsd:annotation>
+										<xsd:documentation>References an object.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="relationshipRef" type="bmtcr1:refType">
+						<xsd:annotation>
+							<xsd:documentation>References a relationship.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="nameType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:string">
+				<xsd:attribute name="locale" type="xsd:language" use="required">
+					<xsd:annotation>
+						<xsd:documentation>Specifies the locale that applies to the parent object.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<xsd:complexType name="dataSourceRefsType">
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="bmtcr1:dataSourceRef"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="dataSourceType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:modelObjectType">
+				<xsd:sequence>
+					<xsd:element name="queryProcessing" default="databaseOnly" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>Determines what degree of local processing is allowed.</para>
+								<para>Note: For SAP BW data sources in this release, this object is ignored but should be set to databaseOnly.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="databaseOnly">
+									<xsd:annotation>
+										<xsd:documentation>The database server does all the SQL processing and execution. A run-time error will appear if any part of the query relating to this data source requires local SQL processing (that is, on the report server).</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="limitedLocal">
+									<xsd:annotation>
+										<xsd:documentation>The database server does as much of the SQL processing and execution as possible. The remainder is done on the report server.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="rollupProcessing" default="unspecified" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>Determines whether aggregate rollups above the lowest level are computed locally or in the database. The default is set to local if local query processing is enabled, and is set to database otherwise.</para>
+								<para>Note: Not applicable for SAP BW data sources.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="unspecified">
+									<xsd:annotation>
+										<xsd:documentation>The aggregation rollup is not specified.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="local">
+									<xsd:annotation>
+										<xsd:documentation>All aggregation rollups are computed locally (in the report server) using a running aggregate (for example, RSUM). Running aggregates spread the cost of this computation as the data is retrieved. Use this option if the local computer has more idle resources than the database computer, or if you find through experiment that it is the fastest method.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="database">
+									<xsd:annotation>
+										<xsd:documentation>Aggregation rollups are computed by the underlying database software if possible. Otherwise, they are computed locally (provided local query processing is enabled). Running aggregates are used, but the cost is incurred by the database server instead of the report server. Use this option if the database computer has more idle resources than the local computer, or if you find through experiment that it is the fastest method.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="extended">
+									<xsd:annotation>
+										<xsd:documentation>All aggregation rollups are computed by the database server using an extended aggregate (for example, XSUM). Extended aggregates incur the entire cost of this computation up front. Typically, this is the fastest method, but only where the database is set up to take advantage of materialized views. For databases where OLAP functionality is supported, this is translated into the appropriate OLAP aggregate functions. </xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="cmDataSource" type="bmtcr1:macroType">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the name of the dataSource in Content Manager. It may be parameterized.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="catalog" type="bmtcr1:macroType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>A hierarchical element that can represent different information for different databases or that may not be used at all. For example, if the database is SQL Server, the element contains the name of the database, and if the database is Oracle, it is not used.</para>
+								<para>Note: For SAP BW data sources, this is the catalog name returned by MDDataProviderBW::GetCatalogs.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cube" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>The internal name of the cube.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="schema" type="bmtcr1:macroType" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>
+								<para>A hierarchical element that can represent different information for different databases, or that may not be used at all. For example, for SQL server or Oracle, the element contains the name of the owner.</para>
+								<para>Note: For SAP BW data sources, assign this object a value of SAP_BW.</para>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="type">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_type_source"/>
+							<xsd:documentation>Specifies the type for a given parent object.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="queryType" default="relational" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<para>The type of query model that this data source understands. SQL sources are relational. MDS sources are multidimensional.</para>
+											<para>Note: For SAP BW data sources, the value is multidimensional.</para>
+										</xsd:documentation>
+									</xsd:annotation>
+									<xsd:simpleType>
+										<xsd:restriction base="xsd:NMTOKEN">
+											<xsd:enumeration value="relational"/>
+											<xsd:enumeration value="multidimensional"/>
+										</xsd:restriction>
+									</xsd:simpleType>
+								</xsd:element>
+								<xsd:element name="interface" type="xsd:string" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<para>RESERVED for internal use. Element is maintained by the application.</para>
+											<para>Note: For SAP BW data sources, set the value to BW.</para>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="functionSetID" type="bmtcr1:functionSetIDType" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>
+											<para>Defines the function set that applies to a data source. Used in the initial population of the functionSets of a securityView when a package is created. To view or edit the list of available function sets, refer to the FileList.xml file, located in the install-location\bin\configuration\functions directory on the server where Framework Manager is installed.</para>
+											<para>Note: For SAP BW data sources, set the value to V_SAPBW.</para>
+										</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+					<xsd:element name="connectionString" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Defines the connection string in the form required for UDA, to a data source. If defined, takes precedence any string defined in Content Manager.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="bmtcr1:aliasTableMapRef" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>References a parameterMap that represents a DB2OLAP or Applix alias table map.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeDescription" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The description of the cube.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubePath" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The full qualified path to the cube.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeCreatedOn" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The date time that the cube was created.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeDataUpdatedOn" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The date time that data in the cube was last updated.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeSchemaUpdatedOn" type="xsd:dateTime" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The date time that the cube schema was last updated.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeIsOptimized" type="xsd:boolean" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Returns true if the cube is optimized.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeDefaultMeasure" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The name of the default measure for the cube.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="cubeCurrentPeriod" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>The current period for the cube.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="suppression" default="none" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the behavior of the suppression in the studios (setting the default mode of their sparsity removal capability).</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="none">
+									<xsd:annotation>
+										<xsd:documentation>The suppression is not specified.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="null">
+									<xsd:annotation>
+										<xsd:documentation>The studio will suppress empty cells only.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="zero">
+									<xsd:annotation>
+										<xsd:documentation>The studio will suppress zero cells only.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+								<xsd:enumeration value="nullAndZero">
+									<xsd:annotation>
+										<xsd:documentation>The studio will suppress both zero and empty cells.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name="attributeDimensionsAsProperties" type="xsd:boolean" default="true" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>"True" means Essbase attribute dimensions are to be presented as properties of other dimensions. It is set to "false" if Essbase attribute dimensions are to be presented as separate dimensions.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="keyType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:token">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_name_keyType"/>
+					<xsd:documentation>Specifies a name for the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="queryItems_collection" type="bmtcr1:refCollectionType">
+				<xsd:annotation>
+					<xsd:documentation>A list of query items that together uniquely identify row value sets in a query subject.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="definitionType">
+		<xsd:choice>
+			<xsd:element name="dbQuery">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Defines a query against the specified database.</para>
+						<para>Note: Not supported for multidimensional data sources, including SAP BW.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="sources" type="bmtcr1:dataSourceRefsType">
+							<xsd:annotation>
+								<xsd:documentation>
+									<para>Only one data source is allowed if sql/@type is native.</para>
+									<para>Note: Not applicable to models based on SAP BW data sources.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element ref="bmtcr1:generateSQL" minOccurs="0"/>
+						<xsd:element ref="bmtcr1:sql"/>
+						<xsd:element name="key" type="bmtcr1:keyType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation source="doc_ele_key_deprecated">Deprecated functionality will be covered by determinants.</xsd:documentation>
+								<xsd:documentation>**** Will be deprecated functionality will be covered by determinants</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="index" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>Deprecated functionality will be covered by determinants.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="unique" type="xsd:boolean">
+										<xsd:annotation>
+											<xsd:documentation>
+												<para>If true, the indexed values are unique.</para>
+												<para>Note: Not applicable to models based on SAP BW data sources.</para>
+											</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:element name="queryItems_collection" type="bmtcr1:refCollectionType">
+										<xsd:annotation>
+											<xsd:documentation>A list of query items that together uniquely identify row value sets in a query subject.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element ref="bmtcr1:filters" minOccurs="0"/>
+						<xsd:element name="tableType" default="unknown" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Defines the type of the underling table on which the query subject is based. The type can be a table, a view, or unknown. Used by the query engine for fetching a blob.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NMTOKEN">
+									<xsd:enumeration value="table">
+										<xsd:annotation>
+											<xsd:documentation>Specifies the table as a table.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="view">
+										<xsd:annotation>
+											<xsd:documentation>Specifies the table as a view.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="nonTransparentTable">
+										<xsd:annotation>
+											<xsd:documentation>Specifies the table as non-transparent.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="unknown">
+										<xsd:annotation>
+											<xsd:documentation source="doc_enum_unknown_tabletype"/>
+											<xsd:documentation>Specifies that the table type is not known.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="multiDb" type="xsd:boolean" use="optional" default="false">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the database definition references multiple databases.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="mdQuery">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>A query for a multidimensional data source.</para>
+						<para>Note: An mdQuery object provides additional metadata required for modeling multidimensional query subjects.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="sources" type="bmtcr1:dataSourceRefsType">
+							<xsd:annotation>
+								<xsd:documentation>
+									<para>Only one data source is allowed if sql/@type is native.</para>
+									<para>Note: Not applicable to models based on SAP BW data sources.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="mdDimension" type="xsd:string" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<para>A representation of the data components that reflect specific business structures. Typically, a dimension is a nested representation of a business concept.</para>
+									<para>Note: For SAP BW, the value of this object is the unique name of the dimension as obtained from MDDataProviderBW::GetDimensions.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element ref="bmtcr1:filters" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="modelQuery">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>A query that references metadata in the model; it does not directly reference a data source.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:generateSQL" minOccurs="0"/>
+						<xsd:element name="sql" type="bmtcr1:sqlType">
+							<xsd:annotation>
+								<xsd:documentation>
+									<para>A read-only cache of the SQL that results from planning the model query. It is updated every time the modelQuery changes, and can be used as a backup if the dependant model objects are lost.</para>
+									<para>Note: Not applicable to models based on SAP BW data sources.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="relationships" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>RESERVED for future use.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+									<xsd:element name="relationshipDefinition">
+										<xsd:annotation>
+											<xsd:documentation>Defines a relationship.</xsd:documentation>
+										</xsd:annotation>
+										<xsd:complexType>
+											<xsd:choice>
+												<xsd:element name="refobj" type="bmtcr1:refType">
+													<xsd:annotation>
+														<xsd:documentation>References an object.</xsd:documentation>
+													</xsd:annotation>
+												</xsd:element>
+												<xsd:element name="embeddedRelationship">
+													<xsd:annotation>
+														<xsd:documentation>RESERVED for future use.</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:group ref="bmtcr1:relationshipProperties"/>
+													</xsd:complexType>
+												</xsd:element>
+											</xsd:choice>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element ref="bmtcr1:filters" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="storedProcedure" type="bmtcr1:storedProcedureType">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Specifies the name, data source, parameters, and type of a procedure stored in the database.</para>
+						<para>Note: Not applicable to models based on SAP BW data sources.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="queryOperation">
+				<xsd:annotation>
+					<xsd:documentation>A query that represents the union or intersection of two query subjects. Note: This does not apply to dimensions.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="querySubjectRefs">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="refobj" type="bmtcr1:refType" minOccurs="2" maxOccurs="2">
+										<xsd:annotation>
+											<xsd:documentation source="doc_ele_refobj_querysubjectrefs"/>
+											<xsd:documentation>References two query subjects to be included in the set.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="setOperation" default="UNION">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NMTOKEN">
+									<xsd:enumeration value="UNION"/>
+									<xsd:enumeration value="INTERSECT"/>
+									<xsd:enumeration value="EXCEPT"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name="duplicates" default="remove">
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NMTOKEN">
+									<xsd:enumeration value="remove"/>
+									<xsd:enumeration value="preserve"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element ref="bmtcr1:filters" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:choice>
+	</xsd:complexType>
+	<xsd:complexType name="parameterMapEntryType">
+		<xsd:sequence>
+			<xsd:element name="key" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_key_parm"/>
+					<xsd:documentation>Defines the unique identifier for the object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="value" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_value_parm"> </xsd:documentation>
+					<xsd:documentation>The value that gets returned when the parameter map locates the key value.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="parameterMapType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:modelObjectType">
+				<xsd:sequence>
+					<xsd:element name="defaultValue" type="xsd:string" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the value to use if no key match is found. If not set, external sources for parameterMaps of this name may be searched.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="loadAsNeeded" type="xsd:boolean" default="false" minOccurs="0">
+						<xsd:annotation>
+							<xsd:documentation>When set to true, then the map will be loaded one key-value at a time, when a key-ed accesses is made. When a getAllEntries access is made, then this flag is ignored.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:choice minOccurs="0">
+						<xsd:element name="parameterMapEntry" type="bmtcr1:parameterMapEntryType" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is an entry in a parameter map.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="queryItemMap" type="bmtcr1:queryItemMapType">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the set of entries in the parameterMap is based on two queryItem references: one represents the set of keys, and the second represents the set of values.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:choice>
+				</xsd:sequence>
+				<xsd:attribute name="hidden" type="xsd:boolean" use="optional" default="false">
+					<xsd:annotation>
+						<xsd:documentation>Specifies whether or not the parameterMap element is hidden.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="supportedLocalesType">
+		<xsd:sequence>
+			<xsd:element name="locale" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Represents a locale that is available for reports based on a package or a project. A locale should not be added to this list until all objects have been translated into the language for the locale.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:simpleContent>
+						<xsd:extension base="xsd:language"/>
+					</xsd:simpleContent>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="calculationType">
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:element ref="bmtcr1:expression"/>
+					<xsd:group ref="bmtcr1:querySubjectFilters"/>
+					<xsd:group ref="bmtcr1:reportingColumnProperties"/>
+					<xsd:group ref="bmtcr1:mdProperties"/>
+				</xsd:sequence>
+				<xsd:attribute name="status" type="bmtcr1:statusType" use="optional" default="valid">
+					<xsd:annotation>
+						<xsd:documentation source="doc_att_status_calc"/>
+						<xsd:documentation>Specifies the status of the resolution of a calculation.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="filterType">
+		<xsd:annotation>
+			<xsd:documentation>Note: The result type of a filter expression must be Boolean.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:reportObjectType">
+				<xsd:sequence>
+					<xsd:element ref="bmtcr1:expression"/>
+				</xsd:sequence>
+				<xsd:attribute name="status" type="bmtcr1:statusType" use="optional" default="valid">
+					<xsd:annotation>
+						<xsd:documentation source="doc_att_status_filter"/>
+						<xsd:documentation>Specifies the status of the resolution of a filter.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:complexType name="determinantType">
+		<xsd:annotation>
+			<xsd:documentation>Captures the relationship between a key and the attributes uniquely described by the key.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_name_determinantType">An arbitrary name to identify the determinate. Initially generated during import and modifiable by the user. Determinants must have a unique name. </xsd:documentation>
+					<xsd:documentation>Unilingual name to identify the determinant used only by FMUI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="key" type="bmtcr1:refCollectionType">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_key_determ">The key is a reference to one or more query items that uniquely identifies the referenced attributes within the query subject. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="attributes" type="bmtcr1:refCollectionType">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_attributes_determ">A collection of query items that are uniquely identified by the key.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="canGroup" type="xsd:boolean" default="false">
+				<xsd:annotation>
+					<xsd:documentation>When set to true, indicates that the query items referenced by the determinant will be grouped by the determinate key.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="identifiesRow" type="xsd:boolean" default="false">
+				<xsd:annotation>
+					<xsd:documentation>When set to true, it means that the key can uniquely identify a row.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:property" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="_determinantType">
+		<xsd:annotation>
+			<xsd:documentation>Captures the relationship between a key and the attributes uniquely described by the key.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:token">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated"/>
+					<xsd:documentation source="doc_ele_name__determinantType_hierarchyType"/>
+					<xsd:documentation>Specifies a name for the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:property" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="externalName" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>A string that identifies this object in the external data source.</para>
+						<para>Note: For SAP BW, the value of this object is the unique name of the level as obtained from MDDataProviderBW::GetLevels.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="externalOrdinal" type="xsd:nonNegativeInteger" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Represents the identifier for this level. For example, month or number.</para>
+						<para>Note: For SAP BW, the level number is obtained from MDDataProviderBW::GetLevels.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice>
+				<xsd:element name="keyref" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation source="deprecated">
+							<para>References a key within a query subject.</para>
+							<para>Note: Represents the key name only; it is not an object reference.</para>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="key">
+					<xsd:annotation>
+						<xsd:documentation source="deprecated">
+							<!--<xsd:documentation source="doc_ele_key__determinantType">-->
+							<para>Defines the unique identifier for the object.</para>
+							<para>Note: For SAP BW data sources, the key for a level references the query item that represents the level identifier. The isUnique attribute should be set to true.</para>
+						</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:complexContent>
+							<xsd:extension base="bmtcr1:keyType">
+								<xsd:attribute name="isUniqueKey" type="xsd:boolean" default="false">
+									<xsd:annotation>
+										<xsd:documentation>Specifies whether or not the key is unique.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:attribute>
+							</xsd:extension>
+						</xsd:complexContent>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:element name="attributes" type="bmtcr1:refCollectionType">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated">
+						<para>A collection of queryItems that provide additional information for the level, but do not identify it. For example, the names of the months in different languages.</para>
+						<para>Note: The collection of attributes for the level of an SAP BW hierarchy contains the properties associated with the level, as indicated by MDDataProviderBW::GetProperties.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="_hierarchyType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:token" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated"/>
+					<xsd:documentation source="doc_ele_name__determinantType_hierarchyType"/>
+					<xsd:documentation>Specifies a name for the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:property" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="externalName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>
+						<!--<xsd:documentation source="doc_ele_externalName_hierarchyType"></xsd:documentation>-->
+						<para>A string that identifies the object in the external data source.</para>
+						<para>Note: For SAP BW, the value of this object is the unique name of the hierarchy as obtained from MDDataProviderBW::GetHierarchies.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="externalOrdinal" type="xsd:nonNegativeInteger" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Represents the identifier for this hierarchy. For example, month or number.</para>
+						<para>Note: For SAP BW, the hierchary number is obtained from MDDataProviderBW::GetHierarchies.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="functionalDependency" type="bmtcr1:refCollectionType">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated">Represents an ordered list of levels. For example: year, month, or day.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="macroType" mixed="true">
+		<xsd:annotation>
+			<xsd:documentation>Text that may contain macro substitutions. This syntax is defined in the Framework Manager User Guide.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:complexType>
+	<xsd:complexType name="securityDefinitionSetType">
+		<xsd:choice>
+			<xsd:element name="refobj" type="bmtcr1:refType" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>References an object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:viewref" maxOccurs="unbounded"/>
+		</xsd:choice>
+		<xsd:attribute name="includeRule" use="optional" default="include">
+			<xsd:annotation>
+				<xsd:documentation>Specifies whether or not objects in the set are included, excluded, or hidden.</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:NMTOKEN">
+					<xsd:enumeration value="include">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the set represents objects that are to be included.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="hide">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the set represents objects that are to be hidden.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+					<xsd:enumeration value="exclude">
+						<xsd:annotation>
+							<xsd:documentation>Specifies that the set represents objects that are to be excluded.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:enumeration>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+	</xsd:complexType>
+	<xsd:complexType name="scopeRelationshipType">
+		<xsd:annotation>
+			<xsd:documentation>TO DO This needs to be normalized with the relationship object.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexContent>
+			<xsd:extension base="bmtcr1:modelObjectType">
+				<xsd:sequence>
+					<xsd:element name="left" type="bmtcr1:cardinalityType">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_left_scopeRelationshipType">References either a measure or regular dimension. </xsd:documentation>
+							<xsd:documentation>points to the dimension</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="right" type="bmtcr1:cardinalityType">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_right_scopeRelationshipType">References either a measure or a regular dimension.</xsd:documentation>
+							<xsd:documentation>Points to the measure dimension.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element name="scope" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation source="doc_ele_scope_scopeRelationshipType">Defines the level to measure scope. In order for there to be a scopeAssociation there must be at least one level to measure scope. This element is optional, and when not supplied implies that all measures scope to the leaf level of the dimension.</xsd:documentation>
+						</xsd:annotation>
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="levelRef" type="bmtcr1:refType">
+									<xsd:annotation>
+										<xsd:documentation>References a level within a dimension. </xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element name="measureScope" maxOccurs="unbounded">
+									<xsd:annotation>
+										<xsd:documentation>References a measure to which the measure scope applies.</xsd:documentation>
+									</xsd:annotation>
+									<xsd:complexType>
+										<xsd:sequence>
+											<xsd:element name="rollup" type="bmtcr1:regularAggregateType" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation source="deprecated"/>
+													<xsd:documentation>(FUTURE) defines the rollup to be applied within this scope. It overrides any rollup defined in the measure, the dimension, or in the underling query subject item for the measure.</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+											<xsd:element name="allocation" minOccurs="0">
+												<xsd:annotation>
+													<xsd:documentation>(FUTURE) allocation type of levels under the level defined under the left element. </xsd:documentation>
+												</xsd:annotation>
+												<xsd:simpleType>
+													<xsd:restriction base="xsd:NMTOKEN">
+														<xsd:enumeration value="doNotAllocate"/>
+														<xsd:enumeration value="constant"/>
+													</xsd:restriction>
+												</xsd:simpleType>
+											</xsd:element>
+											<xsd:element name="refobj" type="bmtcr1:refType">
+												<xsd:annotation>
+													<xsd:documentation source="doc_ele_refobj_measurescope">References a measure in a measure dimension.</xsd:documentation>
+													<xsd:documentation>References a measure or a reference to the entire measures dimension. If the reference is to a measure dimension then it implies that the scope applies to all measures within the dimension.</xsd:documentation>
+												</xsd:annotation>
+											</xsd:element>
+										</xsd:sequence>
+										<xsd:attribute name="excluded" type="xsd:boolean" use="optional" default="false">
+											<xsd:annotation>
+												<xsd:documentation>If set true, then the measure is excluded from the hierarchy implied in the levelRef property.</xsd:documentation>
+											</xsd:annotation>
+										</xsd:attribute>
+									</xsd:complexType>
+								</xsd:element>
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+	<xsd:simpleType name="promptTypeValues">
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="serverDetermined">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will be determined by the server during execution.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="editBox">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will be displayed as an edit box.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectDate">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will display a selectable date.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectDateTime">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will display a selectable date and time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectInterval">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will display a selectable interval.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectTime">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will display a selectable time.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectValue">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the prompt will display a list of values from which the user can select.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectWithSearch">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Specifies that the prompt will be displayed as a user-defined search.</para>
+						<para>Note: Not applicable to a queryItem where usage is set to fact.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="selectWithTree"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="regularAggregateType">
+		<xsd:annotation>
+			<xsd:documentation>The additive aggregation rule. Unless otherwise specified, zero and NULL values are included in calculating the result. </xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="unsupported">
+				<xsd:annotation>
+					<xsd:documentation source="doc_enum_unsupported_aggregate"/>
+					<xsd:documentation>Aggregation is not supported for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="unknown">
+				<xsd:annotation>
+					<xsd:documentation source="doc_enum_unknown_aggregate"/>
+					<xsd:documentation>Aggregation is unknown for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="average">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation is computed as an average of the values in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="automatic">
+				<xsd:annotation>
+					<xsd:documentation>The aggregation rule is determined automatically at run time. Wherever possible, calculated is used, then sum where necessary, followed by unsupported.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="calculated">
+				<xsd:annotation>
+					<xsd:documentation>Aggregated values are computed by aggregating the elements of the expression rather than the result. For example, if the aggregate rule for Q1_a is set to sum, and the rule for q1_b is set to average, then if this query item is based on the expression (QI_a / QI_b) * 100, the aggregate is computed as: ( sum(QI_a)  / average( QI_b ) ) * 100.
+</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="count">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation is computed as a count of the items in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="countDistinct">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation is computed as a count of unique items in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="countNonZero">
+				<xsd:annotation>
+					<xsd:documentation>Excludes zero and NULL values.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="maximum">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation determines the maximum value in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="median">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation determines the median value in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="minimum">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation determines the minimum value in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="standardDeviation">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation determines the standard deviation in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="sum">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation determines the sum of the values in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="variance">
+				<xsd:annotation>
+					<xsd:documentation>Aggregation determines the variance in the result set for this object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="cardinalityEnum">
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="unknown">
+				<xsd:annotation>
+					<xsd:documentation source="doc_enum_unknown_maxmincard"/>
+					<xsd:documentation>Specifies that the maximum number of rows is not known.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="unsupported">
+				<xsd:annotation>
+					<xsd:documentation source="doc_enum_unsupported_feature"/>
+					<xsd:documentation>Specifies that this feature is not supported.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="zero">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that this object has no rows.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="one">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that this object has one row only.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="many">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that this object can have many rows.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:simpleType name="functionSetIDType">
+		<xsd:annotation>
+			<xsd:documentation>A reference to an FDS function set.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:restriction base="xsd:NMTOKEN"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="refType">
+		<xsd:restriction base="xsd:string"/>
+	</xsd:simpleType>
+	<xsd:simpleType name="statusType">
+		<xsd:restriction base="xsd:NMTOKEN">
+			<xsd:enumeration value="valid">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the syntax of the object is valid.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="invalid">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the syntax of the object is not valid.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+			<xsd:enumeration value="needsReevaluation">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that the object syntax needs to be reviewed.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:enumeration>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:group name="routineProperties">
+		<xsd:sequence>
+			<xsd:element name="canonicalName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the name by which an object is known in the database or plug-in.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="type">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_type_proc"/>
+					<xsd:documentation>Specifies the type for a given parent object.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="unknown">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the type is not known.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="procedure">
+							<xsd:annotation>
+								<xsd:documentation>Specifies the type as procedure.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="other">
+							<xsd:annotation>
+								<xsd:documentation>Specifies the type as something other than a procedure.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="procParameters">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_procParameters_routineProperties"/>
+					<xsd:documentation>A container for procParameter elements.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="procParameter" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation source="doc_ele_procParameter_routineProperties"/>
+								<xsd:documentation>
+									<para>Defines a parameter required to call a stored procedure or function. Used to determine whether an expression that uses the stored procedure or function is valid. The value of the parameter is supplied from the expression that uses this function or stored procedure.</para>
+									<para>Note: SAP BW does not support stored procedures and therefore this object should not form part of a Framework Manager model based on an SAP BW data source.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:group ref="bmtcr1:callParameterProperties"/>
+									<xsd:element name="value" type="xsd:string" minOccurs="0">
+										<xsd:annotation>
+											<xsd:documentation source="doc_ele_value_proc"> </xsd:documentation>
+											<xsd:documentation>The value to be passed when the procedure is called.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="hierarchyProperties">
+		<xsd:sequence>
+			<xsd:element name="externalName" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation> External name as found in the datasource that this hierarchy represents. This is only applicable for OLAP sources.</xsd:documentation>
+					<xsd:documentation>
+						<para>A string that identifies this object in the external data source.</para>
+						<para>Note: For SAP BW, the value of this object is the unique name of the level as obtained from MDDataProviderBW::GetLevels.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="multiRoot" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Indicates to OQP if a hierarchy has a single root member, or has multiple members at the highest level.  This affects the generated MDX.
+</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="balanced" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A balanced hierarchy contains no skipped or empty levels. All branches of the dimension hierarchy tree descend through all existing levels, and each level has at least one member. All members at a given level have the same number of ancestors. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="ragged" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The only conceptual difference between a ragged and an unbalanced hierarchy is the fact that branches of a ragged hierarchy descend through all existing levels, even levels that do not contain data.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:group ref="bmtcr1:rootMemberProperties"/>
+			<xsd:element name="sortedHierarchy" default="none" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Indicates if the members at each level of a hierarchy are sorted: asc, desc, none.  Used by OQP to optimize query generation in the presence of user-specified sorts.
+</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="ascending"/>
+						<xsd:enumeration value="descending"/>
+						<xsd:enumeration value="none"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="cardinality" type="xsd:nonNegativeInteger" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Number of nodes/members/categories in a hierarchy.  Used by OQP to assign solve orders to expressions.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="parentChild" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Indicates that the hierarchy is a collection of members arranged in a parent-child hierarchy.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="externalNumberOfLevels" type="xsd:nonNegativeInteger" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Number of levels in a hierarchy. This property is hidden. It is used by OQP to determine which levels are included in the model when constructing the query spec for the RootMembers function.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="isWideFan" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>When true indicates that one or more members may have a large number of child members. In some cases this will trigger an optimization that executes more than one query to populate a dynamic cube.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="querySubjectFilters">
+		<xsd:sequence>
+			<xsd:element name="previewFilters" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A container object for previewFilter elements.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="previewFilter">
+							<xsd:annotation>
+								<xsd:documentation>A filter that is applied at execution time when the report or model is being used in design mode. It is not applied when the report is run.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:choice>
+									<xsd:element name="refobj" type="bmtcr1:refType">
+										<xsd:annotation>
+											<xsd:documentation>References an object.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+									<xsd:sequence>
+										<xsd:element name="displayName" type="xsd:string" minOccurs="0">
+											<xsd:annotation>
+												<xsd:documentation>Specifies the name that will be displayed to the user for the parent object.</xsd:documentation>
+											</xsd:annotation>
+										</xsd:element>
+										<xsd:element ref="bmtcr1:expression"/>
+									</xsd:sequence>
+								</xsd:choice>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="securityFilters" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>At execution time, all filters that match the security objects for this session are applied, combined by OR.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="securityFilterDefinition" type="bmtcr1:securityFilterDefinitionType">
+							<xsd:annotation>
+								<xsd:documentation>Defines a filter that determines the security for the parent object in the current session.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="querySubjectProperties">
+		<xsd:annotation>
+			<xsd:documentation>Specifies the properties of a query subject.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="definition" type="bmtcr1:definitionType">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_definition_qs"/>
+					<xsd:documentation>A container for the specified child element. When the parent object is a package, the definition element describes a view of the model. When the parent is a securityView, the definition element describes a set. When the parent element is a querySubject, the definition element can contain a dbQuery, mdQuery, modelQuery, or storedProcedure description.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:group ref="bmtcr1:balticDimInfo" minOccurs="0"/>
+			<xsd:group ref="bmtcr1:querySubjectFilters"/>
+			<xsd:element name="externalizeMethod" default="default" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the external form for a query subject. For example, if set to csv, a csv file will be generated that contains the entire result set of a query subject. Externalization can only be triggered during a publish operation.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="default">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the method used will be the default.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="csv">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that a csv format file will be generated.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="tab">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that a tab-delimited file format will be generated.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="iqd">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the file generated will be in the format for input to Cognos Impromptu.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="externalizeAutoSummary" type="xsd:boolean" default="false" minOccurs="0"/>
+			<xsd:group ref="bmtcr1:statistics" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="callParameterProperties">
+		<xsd:annotation>
+			<xsd:documentation>The properties of a function or procedure call parameter.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="parameterName" type="xsd:string">
+				<xsd:annotation>
+					<xsd:documentation>Specifies a name for a parameter passed to, or resulting from, execution of a procedure.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="mode">
+				<xsd:annotation>
+					<xsd:documentation>Specifies whether the parameter passed to a procedure is an input parameter, an output parameter, or an input parameter that is changed during execution.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="in">
+							<xsd:annotation>
+								<xsd:documentation>Specifies an input parameter.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="out">
+							<xsd:annotation>
+								<xsd:documentation>Specifies an output parameter.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="inout">
+							<xsd:annotation>
+								<xsd:documentation>Specifies a parameter that is overwritten during execution.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:group ref="bmtcr1:dataColumnProperties"/>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="collationProperties">
+		<xsd:annotation>
+			<xsd:documentation>Properties that are needed by Cognos Universal Data Access (UDA) to handle string collation.  These are an internal optimization that modelers do not normally need to be concerned with. They are managed automatically by the system, and should never be edited directly.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="collationSequenceName" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Cached for UDA only. Used only for sortable character data in a dbQuery.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="collationSequenceLevel" type="xsd:integer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Cached for UDA only. Used only for sortable character data in a dbQuery.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="originalCollationSequenceName" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Cached for UDA only. Used only for sortable character data in a dbQuery.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="originalEncodingName" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies how the data is encoded in the database. Cached for UDA only. Used only for sortable character data in a dbQuery.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="dataColumnProperties">
+		<xsd:annotation>
+			<xsd:documentation>Basic properties of data from a database.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="bmtcr1:datatype" minOccurs="0"/>
+			<xsd:element name="precision" type="xsd:integer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Represents the allowed number of digits or characters. Default is context-dependent. Used only for numeric and decimal types.</para>
+						<para>Note: The precision of numeric values from SAP BW data sources should be set to zero.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="scale" type="xsd:integer" default="0" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Defines the number of digits to the right of the implied decimal point. Used only for numeric and decimal types. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="size" type="xsd:long" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the maximum number of bytes needed to hold a value. </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="nullable" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>If true, this object can contain NULL values.</para>
+						<para>Note: For all SAP BW query items this is false.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="aggregationRule" type="bmtcr1:regularAggregateType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>How the query item is aggregated in the datasource.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="reportingColumnProperties">
+		<xsd:annotation>
+			<xsd:documentation>The properties of a reporting column.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="hidden" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If true, the object is hidden in all published packages.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="usage" default="unknown" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Defines the intended usage of the query item. </xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="unknown">
+							<xsd:annotation>
+								<xsd:documentation source="doc_enum_unknown_usage"/>
+								<xsd:documentation>Specifies that the usage is not known.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="identifier">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is to be treated as an identifier.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="fact">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is to be treated as a fact.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="attribute">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is to be treated as an attribute.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="format" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the format for the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="currency" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>The ISO currency code. Should be present if and only if the data is currency. If the element is present but empty, the currency code is unknown at modeling time, and must be determined by the data at execution time (currently not supported for relational data sources).</para>
+						<para>Note: This object is not relevant for SAP BW data sources. SAP BW returns currency information for each value of a fact or measure.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:group ref="bmtcr1:dataColumnProperties"/>
+			<xsd:element name="displayType" default="value" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>The display type for the query item.</para>
+						<para>Note: By default, the display type for all SAP BW query items and calculations is set to value; its value may also be set to link, if applicable.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="picture">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is displayed as a graphic.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="link">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is displayed as a hypertext link.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="value">
+							<xsd:annotation>
+								<xsd:documentation>Specifies that the object is displayed as its return value.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:enumeration>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="MIMEType" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Used only when the display type is set to picture or link. The default is context dependent.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="promptInfo" type="bmtcr1:promptInfoType" minOccurs="0"/>
+			<xsd:element name="regularAggregate" type="bmtcr1:regularAggregateType" default="unsupported" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Specifies the additive aggregation rule.</para>
+						<para>Note: For SAP BW data sources, may take the values: unsupported, average, averageNotZero, count, countNotZero, automatic, calculated (for expressions), sum, maximum, minimum, median, standardDeviation, variance. For a measure query item, its value may be different from what is defined in SAP BW (with the exception that a redefined aggregate cannot be averageNotZero or countNotZero).</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="semiAggregate" type="bmtcr1:regularAggregateType" default="unsupported" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the semi-additive aggregation rule. This property is not supported for relational sources. For OLAP sources this property is read-only.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sortOnRef" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies that when sorting this item, use the query item referred to as the sort key.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="unSortable" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If true, data values for this object cannot be compared, and reports cannot sort or group by it. Used mainly for data of type blob.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sort" default="none" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated">not used</xsd:documentation>
+					<xsd:documentation>Reserved for future use.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="ascending"/>
+						<xsd:enumeration value="descending"/>
+						<xsd:enumeration value="none"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="roles" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>This property is only applicable for query items that act as attributes for a level or hierarchy. </xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="role" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>A multilingual property that indicates the role of a member attribute such as the caption or description etc. All roles names that start with an underscore.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="name" type="bmtcr1:nameType" maxOccurs="unbounded">
+										<xsd:annotation>
+											<xsd:documentation source="doc_ele_name_reportObjectType"/>
+											<xsd:documentation>   </xsd:documentation>
+										</xsd:annotation>
+									</xsd:element>
+								</xsd:sequence>
+								<xsd:attribute name="intrinsic" type="xsd:boolean" default="false">
+									<xsd:annotation>
+										<xsd:documentation>When true indicates that the attribute with this role will not be displayed in the studios but is available via the roleValue() function. If more than one role is specified the intrinsic property is ANDed for all roles.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:attribute>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="conformanceRef" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>References another query item that represents a column with the same data. Property is only added for Planning for SAP extract.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="queryItemProperties">
+		<xsd:sequence>
+			<xsd:choice>
+				<xsd:element ref="bmtcr1:expression"/>
+				<xsd:element name="externalName" type="xsd:string">
+					<xsd:annotation>
+						<xsd:documentation>External name from the datasource that this query item represents. For example a column name within a table.</xsd:documentation>
+						<xsd:documentation>
+							<para>Specifies the name of the underlying object (for relational sources, the column name or alias).</para>
+							<para>Note: For SAP BW, the value of the column name depends on the underlying object: for query items representing a hierarchy level, the value is [MEMBER_UNIQUE_NAME]; for level properties, the value is the unique property name as obtained from MDDataProviderBW::GetProperties; for measures, the value is the unique measure name as obtained from MDDataProviderBW::GetMeasures; for query items that represent surrogate keys (created by Framework Manager to present a star schema representation of an SAP BW data source), the value is the unique dimension name it represents, as obtained from MDDataProviderBW::GetDimensions.</para>
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+			<xsd:group ref="bmtcr1:reportingColumnProperties"/>
+			<xsd:group ref="bmtcr1:collationProperties"/>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="relationshipProperties">
+		<xsd:sequence>
+			<xsd:element ref="bmtcr1:expression"/>
+			<xsd:element ref="bmtcr1:sql" minOccurs="0"/>
+			<xsd:element name="left" type="bmtcr1:cardinalityType">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_left_relationshipProperties">References the left object in a relationship.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="right" type="bmtcr1:cardinalityType">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_right_relationshipProperties">References the right object in a relationship.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="securityViewProperties">
+		<xsd:sequence>
+			<xsd:element name="definition">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_definition_sv"/>
+					<xsd:documentation>A container for the specified child element. When the parent object is a package, the definition element describes a view of the model. When the parent is a securityView, the definition element describes a set. When the parent element is a querySubject, the definition element can contain a dbQuery, mdQuery, modelQuery, or storedProcedure description.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="set" type="bmtcr1:securityDefinitionSetType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>A set of included or excluded objects, or included securityViews.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="access">
+				<xsd:annotation>
+					<xsd:documentation>Defines who has access to a subset in the published model.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:decisionRole" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:functionSets" minOccurs="0"/>
+			<xsd:element ref="bmtcr1:qosOverrides" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="packageProperties">
+		<xsd:sequence>
+			<xsd:element name="lastPublished" type="xsd:dateTime" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Defines the last date and time that the package was published to Content Manager.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lastPublishedCMPath" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Last Content Manager path used when package was published.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="maxVersions" type="xsd:nonNegativeInteger" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The maximum number of published versions of a package to be stored in Content Manager. If this element is absent, versioning is disabled. The value 0 means unlimited versions.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="locales" type="bmtcr1:supportedLocalesType">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>A container element that groups all locale elements for a package or a project.</para>
+						<para>Note: This list cannot be independently edited. There must be exactly one instance of every localizable property on every object for each locale in this list.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="definition">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_definition_pk">Defines the objects that will be available in the package.</xsd:documentation>
+					<xsd:documentation>A container for the specified child element. When the parent object is a package, the definition element describes a view of the model. When the parent is a securityView, the definition element describes a set. When the parent element is a querySubject, the definition element can contain a dbQuery, mdQuery, modelQuery, or storedProcedure description.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:viewref" minOccurs="0" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="adminAccess">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>The set of security objects to which administrative permissions are granted on the published model, as defined in Content Manager. The permissions are Read, Write, Traverse, and setPolicy.</para>
+						<para>Note: The original publisher of the package, its owner, is always granted these permissions.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:decisionRole" minOccurs="0"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="isNullSuppressionAllowed" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Controls whether or not NULL suppression is turned on in the query engines </para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="isMultiEdgeNullSuppressionAllowed" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Indicates whether or not it is permissible to suppress on more than a single edge. The default value is "true". 
+</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="isAccessToNullSuppressionOptionsAllowed" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Indicates that the user is allowed to modify the suppression options. The default is that all forms of suppression are enabled and accessible ("true"). 
+</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="useV5DataServer" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Controls whether or not the V5 Data Server (XQE engine) is used instead of the legacy one.  This is a temporary property that will be removed once the XQE engine will be the default engine.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="dimensionProperties">
+		<xsd:sequence>
+			<xsd:element name="type">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_type_dim">Indicates the type of dimension as either a measure, time, regular or currency dimension.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="regular"/>
+						<xsd:enumeration value="time">
+							<xsd:annotation>
+								<xsd:documentation source="doc_enum_time_dim"/>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="measure"/>
+						<xsd:enumeration value="currency"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="membersRollup" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>When set true, this property indicates that all measure values for members can be rollup using the aggregation of the measure. If the value is false, it means the values may be computed differently for some or all members.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sortMembersMetadata" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>When set true, this property indicates that the members will appear sorted in the metadata tree and by default on the report without causing a negative performance impact </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sortMembersData" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>When set true, this property indicates that indicates that the data  will be sorted on the report without causing a negative performance impact </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="sortMembersAndEnableMrf" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>When set true, this property will cause multiple queries to the underlying relational database (as per CR1432) </xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:aliasTableMapRef" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="mdProperties">
+		<xsd:annotation>
+			<xsd:documentation>If any mdProperties are set then it implies that the calculation is read-only since it has been imported from an OLAP source.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="externalName" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>A string that identifies this object in the external data source. A non-emptyvalue indicates that the object was created during an import. If that is the case the expression will be set to read-only in the UI.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="calcType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>If the calculation is imported from OLAP sources, calculation can represent either a named set or a substitution variable.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:NMTOKEN">
+						<xsd:enumeration value="unknown">
+							<xsd:annotation>
+								<xsd:documentation source="doc_enum_unknown_calctype"/>
+							</xsd:annotation>
+						</xsd:enumeration>
+						<xsd:enumeration value="namedSet"/>
+						<xsd:enumeration value="macros"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="hierarchies" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>List of hierarchy references the set calculation it represents.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="refobj" type="bmtcr1:refType" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation>References an object.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="dimensions" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>List of dimension references the set calculation it represents.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="refobj" type="bmtcr1:refType" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="datasources" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation source="doc_ele_datasources_lc">References the datasource object for calculations that represent subsitution variables (or 'macros' as they're called in the OLAP import doc).</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:dataSourceRef" maxOccurs="unbounded"/>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="parentChildHierarchy">
+		<xsd:annotation>
+			<xsd:documentation>Represents a parent/child tree of members. Each query item under the hierarchy represents the attribute of all members within the hierarchy.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element ref="bmtcr1:queryItem"/>
+			<xsd:element ref="bmtcr1:queryItemFolder"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="levelBaseHierarchy">
+		<xsd:annotation>
+			<xsd:documentation>A hierarchy of levels.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="bmtcr1:level" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="memberDimension">
+		<xsd:annotation>
+			<xsd:documentation>A dimension that contains a hierarchy of levels or represents a parent/child hierarchy of members.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="defaultHierarchy" type="bmtcr1:refType" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>References the default hierarchy for this dimension.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:choice maxOccurs="unbounded">
+				<xsd:element ref="bmtcr1:hierarchy"/>
+				<xsd:element ref="bmtcr1:hierarchyFolder"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="measureDimensionItems">
+		<xsd:annotation>
+			<xsd:documentation>Measure dimension contains measures. It may also contain query items which would represent the foreign keys of the dimension connected to the measure dimension. In the case of a model measure dimension, query items are not required.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element ref="bmtcr1:measure"/>
+			<xsd:element ref="bmtcr1:measureFolder"/>
+			<xsd:group ref="bmtcr1:measureDimQueryItems"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="balticDimInfo">
+		<xsd:annotation>
+			<xsd:documentation source="deprecated">For backward compatibility purposes. This will be deprecated in a future release.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="levels" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated">For backward compatibility only. To be deprecated.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="_level" type="bmtcr1:_determinantType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation source="deprecated"/>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="hierarchies" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation source="deprecated"/>
+					<xsd:documentation>For backward compatibility only. To be deprecated.</xsd:documentation>
+				</xsd:annotation>
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="_hierarchy" type="bmtcr1:_hierarchyType" minOccurs="0" maxOccurs="unbounded">
+							<xsd:annotation>
+								<xsd:documentation source="deprecated"/>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="measureDimQueryItems">
+		<xsd:annotation>
+			<xsd:documentation>A collection of query items that would represent the foreign keys in a fact table. These would only be applicable in the case of a database measure dimension.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:choice>
+			<xsd:element ref="bmtcr1:queryItem"/>
+			<xsd:element ref="bmtcr1:queryItemFolder"/>
+		</xsd:choice>
+	</xsd:group>
+	<xsd:group name="rootMemberProperties">
+		<xsd:annotation>
+			<xsd:documentation>These properties only apply if the hierarchy contains a single root member. These properties will not be set for multiroot hierarchies.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="rootMember" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>The external name of the root member for a hierarchy as captured from the datasource. This property is only applicable to OLAP sources.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rootMUN" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Member unique name for the root member.This property is only set if the hierarchy has only a single root member. This is a multilingual property.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="rootCaption" type="bmtcr1:nameType" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation>Caption property of the root member. This property is only set if the hierarchy has only a single root member. This is a multilingual property.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="changeManagement">
+		<xsd:annotation>
+			<xsd:documentation>Properties related to change management.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element ref="bmtcr1:guid" minOccurs="0"/>
+			<xsd:element name="lastChanged" type="xsd:dateTime" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the date and time of the most recent change to the parent object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="lastChangedBy" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>User name of the last user to change the object.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="comment" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Model developer comment. This property is only used by the FM application.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="projectProperties">
+		<xsd:annotation>
+			<xsd:documentation>The Properties of a project.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="locales" type="bmtcr1:supportedLocalesType">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>A container element that groups all locale elements for a package or a project.</para>
+						<para>Note: This list cannot be independently edited. There must be exactly one instance of every localizable property on every object for each locale in this list.</para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="defaultLocale" type="xsd:language">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the default locale for a project.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="fixIdsToDefaultLocale" type="xsd:boolean" default="false" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>FM-Durable Models</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:qosOverrides" minOccurs="0"/>
+			<xsd:element name="isNullSuppressionAllowed" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Controls whether or not NULL suppression is turned on in the query engines </para>
+						<para>NOTE:  This value is not modifiable and is copied from the package object when the model is being published. </para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="isMultiEdgeNullSuppressionAllowed" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Indicates whether or not it is permissible to suppress on more than a single edge. The default value is "true". 
+</para>
+						<para>NOTE:  This value is not modifiable and is copied from the package object when the model is being published. </para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="isAccessToNullSuppressionOptionsAllowed" type="xsd:boolean" default="true" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>
+						<para>Indicates that the user is allowed to modify the suppression options. The default is that all forms of suppression are enabled and accessible ("true"). 
+</para>
+						<para>NOTE:  This value is not modifiable and is copied from the package object when the model is being published. </para>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="bmtcr1:steward" minOccurs="0"/>
+			<xsd:element name="physicalSources" minOccurs="0">
+				<xsd:complexType>
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="physicalSource">
+							<xsd:complexType>
+								<xsd:choice>
+									<xsd:element name="filePath"/>
+									<xsd:element name="content"/>
+								</xsd:choice>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:group name="statistics">
+		<xsd:annotation>
+			<xsd:documentation>Properties related to statistics. These properties are used by the query engine to optimize query planning when the "Use statistics" governor is enabled.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="numberOfRows" type="xsd:integer" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Specifies the number of rows of data for the parent query subject.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:group>
+	<xsd:element name="project">
+		<xsd:annotation>
+			<xsd:documentation>The root object of the model. For object referencing purposes, the name of this namespace is empty.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:modelObjectType">
+					<xsd:sequence>
+						<xsd:group ref="bmtcr1:projectProperties"/>
+						<xsd:element ref="bmtcr1:namespace"/>
+						<xsd:element name="dataSources">
+							<xsd:annotation>
+								<xsd:documentation>A container element that groups dataSource elements.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+									<xsd:element ref="bmtcr1:dataSource"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="parameterMaps">
+							<xsd:annotation>
+								<xsd:documentation>A container element that groups parameterMap elements.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element ref="bmtcr1:parameterMap" maxOccurs="unbounded"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="securityViews">
+							<xsd:annotation>
+								<xsd:documentation>
+									<para>A container for securityView elements.</para>
+									<para>Note: Not applicable for SAP BW data sources in this release.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element ref="bmtcr1:securityView" minOccurs="0" maxOccurs="unbounded"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="packages">
+							<xsd:annotation>
+								<xsd:documentation>A container element that groups package elements.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element ref="bmtcr1:package" minOccurs="0" maxOccurs="unbounded"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+					<xsd:attribute name="useMFW" use="optional" default="false">
+						<xsd:annotation>
+							<xsd:documentation>Internal Use Only - Enables the model to be opened using the metadata framework</xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="true"/>
+								<xsd:enumeration value="false"/>
+								<xsd:enumeration value="always">
+									<xsd:annotation>
+										<xsd:documentation source="doc_enum_always_project"/>
+									</xsd:annotation>
+								</xsd:enumeration>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+					<xsd:attribute name="containsDynamicContent" type="xsd:boolean" use="optional" default="false">
+						<xsd:annotation>
+							<xsd:documentation>Internal Use Only - Indicates that the model contains references to external metadata sources</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+					<xsd:attribute name="queryMode" use="optional" default="mixed">
+						<xsd:annotation>
+							<xsd:documentation>Indicates which query mode the model is in. In dynamic mode XQE is used through out, while in mixed mode, XQE is used as a check box option in testing and publishing </xsd:documentation>
+						</xsd:annotation>
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:NMTOKEN">
+								<xsd:enumeration value="mixed"/>
+								<xsd:enumeration value="dynamic"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="package" type="bmtcr1:packageViewType">
+		<xsd:annotation>
+			<xsd:documentation>Represents a packaging of model objects to be published for one or more reporting applications.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="securityView" type="bmtcr1:securityViewType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>A relationship between a subset of the model and who has access to it in the published model for reporting purposes.</para>
+				<para>Note: Not supported for SAP BW data sources in this release.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="folder" type="bmtcr1:sectionType">
+		<xsd:annotation>
+			<xsd:documentation>A container that does not participate in object references.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="namespace">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>A container that participates in object references. The first part of a reference to any object is its nearest containing namespace (which may be itself).</para>
+				<para>Note: Each SAP BW data source (for example, InfoCube, Query) must be represented in a Framework Manager model in a separate namespace.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:namespaceType">
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element name="linkedNode">
+							<xsd:annotation>
+								<xsd:documentation>Defines a link to a metadata source (RESERVED for internal use)</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="source">
+										<xsd:complexType>
+											<xsd:choice maxOccurs="unbounded">
+												<xsd:element name="connection">
+													<xsd:annotation>
+														<xsd:documentation>Information required for connect to the source</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:attribute name="name" type="xsd:string" use="required"/>
+														<xsd:attribute name="value" type="xsd:string" use="required"/>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="scope">
+													<xsd:annotation>
+														<xsd:documentation source="doc_ele_scope_linkedNode">Information needed to scope the source (e.g. catalog or schema)</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:attribute name="name" type="xsd:string" use="required"/>
+														<xsd:attribute name="value" type="xsd:string" use="required"/>
+													</xsd:complexType>
+												</xsd:element>
+												<xsd:element name="signon">
+													<xsd:annotation>
+														<xsd:documentation>Credential needed to connec to the source</xsd:documentation>
+													</xsd:annotation>
+													<xsd:complexType>
+														<xsd:attribute name="name" type="xsd:string" use="required"/>
+														<xsd:attribute name="value" type="xsd:string" use="required"/>
+													</xsd:complexType>
+												</xsd:element>
+											</xsd:choice>
+											<xsd:attribute name="type" type="xsd:string" use="required">
+												<xsd:annotation>
+													<xsd:documentation>type of the metadata source, such as modelFM, reportCRN, PC and so on.</xsd:documentation>
+												</xsd:annotation>
+											</xsd:attribute>
+										</xsd:complexType>
+									</xsd:element>
+									<xsd:element name="queryPath">
+										<xsd:annotation>
+											<xsd:documentation>The query that is executed on the source to retrieve the linked objects</xsd:documentation>
+										</xsd:annotation>
+										<xsd:complexType>
+											<xsd:attribute name="value" type="xsd:string" use="required"/>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+								<xsd:attribute name="type" type="xsd:string" use="required">
+									<xsd:annotation>
+										<xsd:documentation>Type of the linked objects, e.g. namespace or dimension</xsd:documentation>
+									</xsd:annotation>
+								</xsd:attribute>
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="function" type="bmtcr1:functionType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>A function that is stored in a database instance, as specified by its schema. Sometimes called a user-defined database function. Contrast this with functions that are built in by the database vendor.</para>
+				<para>Note: As there is no provision in SAP BW 3.0B for user defined functions, this object should not be used in a model for an SAP BW data source.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="generateSQL" default="minimized">
+		<xsd:annotation>
+			<xsd:documentation>Causes a query to generate the SQL commands used. If set to minimized, only the required query items appear in the generated SQL. If set to asView, all query items appear.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:NMTOKEN">
+				<xsd:enumeration value="asView">
+					<xsd:annotation>
+						<xsd:documentation>Specifies that all query items appear in the generated SQL.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="minimized">
+					<xsd:annotation>
+						<xsd:documentation>Specifies that only the required query items appear in the generated SQL.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="updateSubject" type="bmtcr1:querySubjectType">
+		<xsd:annotation>
+			<xsd:documentation>Represents an update action for a physical database.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="querySubject">
+		<xsd:annotation>
+			<xsd:documentation>Represents a view or query of a physical database.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:querySubjectType">
+					<xsd:sequence>
+						<xsd:element name="determinants" minOccurs="0">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="determinant" type="bmtcr1:determinantType" minOccurs="0" maxOccurs="unbounded"/>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:choice minOccurs="0" maxOccurs="unbounded">
+							<xsd:element ref="bmtcr1:queryItem"/>
+							<xsd:element ref="bmtcr1:queryItemFolder"/>
+						</xsd:choice>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="queryItem">
+		<xsd:annotation>
+			<xsd:documentation>A reportable data item from a query subject or as an attribute of a dimension. For example, an item in the projection list of the SQL definition of a query subject.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:queryItemType"/>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="object" type="bmtcr1:objectType">
+		<xsd:annotation>
+			<xsd:documentation>Represents a generic customizable object.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="relationship" type="bmtcr1:relationshipType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>An expression that can be used to join two query subjects.</para>
+				<para>Note: There is no SQL associated with a relationship in a model based on an SAP BW data source.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="mproperty">
+		<xsd:annotation>
+			<xsd:documentation>Represents a multilingual customizable property.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:propertyType">
+					<xsd:attribute name="locale" type="xsd:language" use="required">
+						<xsd:annotation>
+							<xsd:documentation>Specifies the locale that applies to the parent object.</xsd:documentation>
+						</xsd:annotation>
+					</xsd:attribute>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="property">
+		<xsd:annotation>
+			<xsd:documentation>Represents a generic customizable property.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType mixed="true">
+			<xsd:complexContent mixed="true">
+				<xsd:extension base="bmtcr1:propertyType">
+					<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+						<xsd:element ref="bmtcr1:property"/>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="shortcut" type="bmtcr1:shortcutType">
+		<xsd:annotation>
+			<xsd:documentation>An object that points to another object. Used to represent an object in another container, or at the other end of a self-join.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="relationshipShortcut" type="bmtcr1:relationshipShortcutType">
+		<xsd:annotation>
+			<xsd:documentation>Defines a shortcut reference to a relationship. Used to represent that relationship in a container where one or both ends are represented by shortcuts.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="expression" type="bmtcr1:expressionType">
+		<xsd:annotation>
+			<xsd:documentation>Defines a filter or a calculation.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="sql" type="bmtcr1:sqlType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>A read-only cache of the SQL that results from planning the model query. It is updated every time the modelQuery changes, and can be used as a backup if the dependant model objects are lost.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="dataSourceRef" type="bmtcr1:refType">
+		<xsd:annotation>
+			<xsd:documentation>References the data source object.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="dataSource" type="bmtcr1:dataSourceType">
+		<xsd:annotation>
+			<xsd:documentation>Specifies a data source for a project.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="parameterMap" type="bmtcr1:parameterMapType">
+		<xsd:annotation>
+			<xsd:documentation>A lookup table for controlling query generation. As a minimum, the _env and _governor maps are required.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="datatype" default="unknown">
+		<xsd:annotation>
+			<xsd:documentation>
+				<para>Specifies the data type for the parent object.</para>
+				<para>Note: The supported datatypes for SAP BW data sources are: float, character, date, and time.</para>
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:NMTOKEN">
+				<xsd:enumeration value="unknown">
+					<xsd:annotation>
+						<xsd:documentation source="doc_enum_unknown_datatype"/>
+						<xsd:documentation>Data type is not known.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="unsupported">
+					<xsd:annotation>
+						<xsd:documentation source="doc_enum_unsupported_datatype"/>
+						<xsd:documentation>Data type is not supported.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="int16">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 16 bit integer.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="int32">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 32 bit integer.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="int64">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 64 bit integer.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="decimal">
+					<xsd:annotation>
+						<xsd:documentation>Data type is decimal.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="numeric">
+					<xsd:annotation>
+						<xsd:documentation>Data type is numeric.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="float">
+					<xsd:annotation>
+						<xsd:documentation>Data type is floating point.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="float32">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 32 bit floating point.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="float64">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 64 bit floating point.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="binary">
+					<xsd:annotation>
+						<xsd:documentation>Data type is binary.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="binaryLength16">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 16 bit binary.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="date">
+					<xsd:annotation>
+						<xsd:documentation>Data type is date format (YYMMDD).</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="time">
+					<xsd:annotation>
+						<xsd:documentation>Data type is time format (HHMMSS).</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="dateTime">
+					<xsd:annotation>
+						<xsd:documentation>Data type is date/time format.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="timeInterval">
+					<xsd:annotation>
+						<xsd:documentation>Data type represents a time interval.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="character">
+					<xsd:annotation>
+						<xsd:documentation>Data type is character.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="characterLength16">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 16 bit character.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="characterLength32">
+					<xsd:annotation>
+						<xsd:documentation>Data type is 32 bit character.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="blob">
+					<xsd:annotation>
+						<xsd:documentation source="doc_enum_blob_datatype"/>
+						<xsd:documentation>Data type is blob.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="textBlob">
+					<xsd:annotation>
+						<xsd:documentation>Data type is blob, containing text.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="blobArray">
+					<xsd:annotation>
+						<xsd:documentation>Data type is blob, containing an array.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="databaseKey">
+					<xsd:annotation>
+						<xsd:documentation>Data type represents a database key.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="varBit">
+					<xsd:annotation>
+						<xsd:documentation>Data type is variable bit.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="bit">
+					<xsd:annotation>
+						<xsd:documentation>Data type is bit.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="boolean">
+					<xsd:annotation>
+						<xsd:documentation source="doc_enum_boolean_datatype"/>
+						<xsd:documentation>Data type is boolean.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="timeTZ">
+					<xsd:annotation>
+						<xsd:documentation>Data type represents time, that includes the time zone.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="timeStampTZ">
+					<xsd:annotation>
+						<xsd:documentation>Data type represents a time stamp, that includes the time zone.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="intervalYM">
+					<xsd:annotation>
+						<xsd:documentation>Data type represents a year and month interval.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="nChar">
+					<xsd:annotation>
+						<xsd:documentation>Data type is character, with a length of n.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+				<xsd:enumeration value="nVarChar">
+					<xsd:annotation>
+						<xsd:documentation>Data type is character, with a variable length whose maximum is n.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:enumeration>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:element>
+	<xsd:element name="queryItemFolder" type="bmtcr1:queryItemFolderType">
+		<xsd:annotation>
+			<xsd:documentation>A folder containing only query items.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="calculation" type="bmtcr1:calculationType">
+		<xsd:annotation>
+			<xsd:documentation>Defines an expression that returns a value.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="filter" type="bmtcr1:filterType">
+		<xsd:annotation>
+			<xsd:documentation>Specifies an expression used to query the data in the specified database.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="decisionRole" type="bmtcr1:decisionRoleType">
+		<xsd:annotation>
+			<xsd:documentation>RESERVED for future use.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="viewref" type="bmtcr1:refType">
+		<xsd:annotation>
+			<xsd:documentation>References a security view.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="securityObject" type="bmtcr1:securityObjectType">
+		<xsd:annotation>
+			<xsd:documentation>Defines an account, group, or role.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="cmSearchPath" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>The Content Manager search path (Cognos Access Manager ID) for an object.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="refobjViaShortcut">
+		<xsd:annotation>
+			<xsd:documentation>References a query item that goes through a shortcut. The first reference is to a shortcut for a query subject. The second reference is to a query item within that query subject. This reference form preserves the container context used by the system to choose between join paths that would otherwise be ambiguous.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="refobj" type="bmtcr1:refType">
+					<xsd:annotation>
+						<xsd:documentation>References an object.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="refobj" type="bmtcr1:refType">
+					<xsd:annotation>
+						<xsd:documentation>References an object.</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:sequence>
+			<xsd:attribute name="dataItemName" type="xsd:string" use="optional"/>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="dimension">
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:querySubjectType">
+					<xsd:sequence>
+						<xsd:group ref="bmtcr1:dimensionProperties"/>
+						<xsd:choice>
+							<xsd:group ref="bmtcr1:measureDimensionItems" maxOccurs="unbounded"/>
+							<xsd:group ref="bmtcr1:memberDimension"/>
+						</xsd:choice>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="level">
+		<xsd:annotation>
+			<xsd:documentation>A level within a hierarchy. Each query item under a level represents a level attribute and/or key.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:queryItemFolderType">
+					<xsd:sequence>
+						<xsd:element name="isUnique" type="xsd:boolean" default="false" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>When set to true, it indicates that the members can be uniquely identified with the businessKey attribute without the additional context from the parent members.
+</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="externalName" type="xsd:string" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>The external name as found in the datasource that this level represents. This is only applicable for OLAP sources.</xsd:documentation>
+								<xsd:documentation>
+									<para>A string that identifies this object in the external data source.</para>
+									<para>Note: For SAP BW, the value of this object is the unique name of the level as obtained from MDDataProviderBW::GetLevels.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="externalOrdinal" type="xsd:integer" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>
+									<para>Represents the identifier for this level. For example, month or number.</para>
+									<para>Note: For SAP BW, the level number is obtained from MDDataProviderBW::GetLevels.</para>
+								</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="isManual" type="xsd:boolean" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>When set to true, it means that the level has been manually added and does not exist in the datasource.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="memberSort" type="bmtcr1:orderByType" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>An ordered list of sort items that describe how the members will be sorted under a level.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="scopeRelationship" type="bmtcr1:scopeRelationshipType">
+		<xsd:annotation>
+			<xsd:documentation>Defines that a dimension is within scope of a measure dimension.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="measureFolder">
+		<xsd:annotation>
+			<xsd:documentation>A folder containing only measures or other measure folders.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:reportObjectType">
+					<xsd:sequence>
+						<xsd:element name="hidden" type="xsd:boolean" minOccurs="0"/>
+						<xsd:choice minOccurs="0" maxOccurs="unbounded">
+							<xsd:element ref="bmtcr1:measure"/>
+							<xsd:element ref="bmtcr1:measureFolder"/>
+						</xsd:choice>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="measure">
+		<xsd:annotation>
+			<xsd:documentation>An item that represents the fact in a measure dimension.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:queryItemType">
+					<xsd:sequence>
+						<xsd:element ref="bmtcr1:measure" minOccurs="0" maxOccurs="unbounded"/>
+						<xsd:element name="isHierarchical" type="xsd:boolean" default="false" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>When set to true, it indicates that this measure contains other measures. Used to optimize runtime performance.</xsd:documentation>
+							</xsd:annotation>
+						</xsd:element>
+						<xsd:element name="aggregateRules" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>A collection of aggregate rules.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="aggregateRule" minOccurs="0" maxOccurs="unbounded">
+										<xsd:annotation>
+											<xsd:documentation>The aggregation rule for a that applies to this measure for the specified dimension.</xsd:documentation>
+										</xsd:annotation>
+										<xsd:complexType>
+											<xsd:sequence>
+												<xsd:element name="dimensionRef">
+													<xsd:annotation>
+														<xsd:documentation>References the dimension that the aggregation rule applies to.</xsd:documentation>
+													</xsd:annotation>
+												</xsd:element>
+												<xsd:element name="applyAggregate">
+													<xsd:annotation>
+														<xsd:documentation>Aggregation to apply .... sum, first, last, avg, etc.</xsd:documentation>
+													</xsd:annotation>
+													<xsd:simpleType>
+														<xsd:restriction base="xsd:token">
+															<xsd:enumeration value="unsupported"/>
+															<xsd:enumeration value="unknown"/>
+															<xsd:enumeration value="sum"/>
+															<xsd:enumeration value="minimum"/>
+															<xsd:enumeration value="maximum"/>
+															<xsd:enumeration value="average"/>
+															<xsd:enumeration value="count"/>
+															<xsd:enumeration value="firstPeriod"/>
+															<xsd:enumeration value="lastPeriod"/>
+															<xsd:enumeration value="standardDeviation"/>
+															<xsd:enumeration value="variance"/>
+														</xsd:restriction>
+													</xsd:simpleType>
+												</xsd:element>
+											</xsd:sequence>
+										</xsd:complexType>
+									</xsd:element>
+								</xsd:sequence>
+							</xsd:complexType>
+						</xsd:element>
+						<xsd:element name="allocationRule" default="default" minOccurs="0">
+							<xsd:annotation>
+								<xsd:documentation>Needed to extend the Measure Scope support for Multifact DMR Models.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NMTOKEN">
+									<xsd:enumeration value="default">
+										<xsd:annotation>
+											<xsd:documentation source="doc_enum_default_allocationRule"/>
+											<xsd:documentation>Constant allocation in list queries and once-only allocation in crosstab queries</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="constant">
+										<xsd:annotation>
+											<xsd:documentation source="doc_enum_constant_allocationRule"/>
+											<xsd:documentation>Constant allocation in all cases.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="hierarchy">
+		<xsd:annotation>
+			<xsd:documentation>A hierarchy within a dimension.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:objectType">
+					<xsd:sequence>
+						<xsd:choice>
+							<xsd:group ref="bmtcr1:levelBaseHierarchy"/>
+							<xsd:group ref="bmtcr1:parentChildHierarchy" maxOccurs="unbounded"/>
+						</xsd:choice>
+						<xsd:group ref="bmtcr1:hierarchyProperties"/>
+					</xsd:sequence>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="functionSets">
+		<xsd:annotation>
+			<xsd:documentation>Defines the function sets available to report authors. Typically, they are the same as those of the data sources used.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="functionSet" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="functionSetID" type="bmtcr1:functionSetIDType"/>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="qosOverrides">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="qosOverride" minOccurs="0" maxOccurs="unbounded">
+					<xsd:annotation>
+						<xsd:documentation>A quality of service overriding specification</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="functionId" type="xsd:string">
+								<xsd:annotation>
+									<xsd:documentation>An id that identifies a function. This is the same as the id saved in FDS.</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:element name="qosLevel" minOccurs="0">
+								<xsd:annotation>
+									<xsd:documentation>Quality of service indicator for qos as defined in FDS.</xsd:documentation>
+								</xsd:annotation>
+								<xsd:simpleType>
+									<xsd:restriction base="xsd:NMTOKEN">
+										<xsd:enumeration value="unavailable"/>
+										<xsd:enumeration value="restricted"/>
+										<xsd:enumeration value="limited"/>
+										<xsd:enumeration value="ok"/>
+									</xsd:restriction>
+								</xsd:simpleType>
+							</xsd:element>
+							<xsd:element name="description" type="bmtcr1:nameType" minOccurs="0" maxOccurs="unbounded">
+								<xsd:annotation>
+									<xsd:documentation>Multilingual string of additional description text to include in the expression editor tips window.</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="filters">
+		<xsd:annotation>
+			<xsd:documentation>Represents an arbitrary mix of conditions and references to filters.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element name="filterDefinition">
+					<xsd:annotation>
+						<xsd:documentation>Specifies the definition of a filter to be applied to the parent object.</xsd:documentation>
+					</xsd:annotation>
+					<xsd:complexType>
+						<xsd:choice>
+							<xsd:element name="refobj" type="bmtcr1:refType">
+								<xsd:annotation>
+									<xsd:documentation>References an object.</xsd:documentation>
+								</xsd:annotation>
+							</xsd:element>
+							<xsd:sequence>
+								<xsd:element name="displayName" type="xsd:string" minOccurs="0">
+									<xsd:annotation>
+										<xsd:documentation>Specifies the name that will be displayed to the user for the parent object.</xsd:documentation>
+									</xsd:annotation>
+								</xsd:element>
+								<xsd:element ref="bmtcr1:expression"/>
+							</xsd:sequence>
+						</xsd:choice>
+						<xsd:attribute name="apply" use="optional" default="always">
+							<xsd:annotation>
+								<xsd:documentation>Specifies the frequency with which the definition of the filter will be applied.</xsd:documentation>
+							</xsd:annotation>
+							<xsd:simpleType>
+								<xsd:restriction base="xsd:NMTOKEN">
+									<xsd:enumeration value="always">
+										<xsd:annotation>
+											<xsd:documentation>Specifies that the filter is always applied.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+									<xsd:enumeration value="asNeeded">
+										<xsd:annotation>
+											<xsd:documentation>When the filter contains a prompt, allows the user to choose not to supply a value, in which case the filter is not applied.</xsd:documentation>
+										</xsd:annotation>
+									</xsd:enumeration>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:attribute>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="hierarchyFolder">
+		<xsd:annotation>
+			<xsd:documentation>A folder containing only hierarchies or other hierarchy folders.</xsd:documentation>
+		</xsd:annotation>
+		<xsd:complexType>
+			<xsd:complexContent>
+				<xsd:extension base="bmtcr1:reportObjectType">
+					<xsd:choice maxOccurs="unbounded">
+						<xsd:element ref="bmtcr1:hierarchy"/>
+						<xsd:element ref="bmtcr1:hierarchyFolder"/>
+					</xsd:choice>
+				</xsd:extension>
+			</xsd:complexContent>
+		</xsd:complexType>
+	</xsd:element>
+	<xsd:element name="steward" type="xsd:string">
+		<xsd:annotation>
+			<xsd:documentation>The name of the person or process responsible  for the object</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="guid">
+		<xsd:annotation>
+			<xsd:documentation>Unique identifier for an object in the model</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+	<xsd:element name="aliasTableMapRef" type="bmtcr1:refType">
+		<xsd:annotation>
+			<xsd:documentation>References a parameterMap that represents a DB2OLAP or Applix alias table map.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
+</xsd:schema>
